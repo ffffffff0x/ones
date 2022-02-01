@@ -167,7 +167,6 @@ osint_fofa(){
     rm -rf fofa_tmp
     Echo_INFOR "结果导出 (json): fofa.json"
     Echo_INFOR "结果输出 (txt) : fofa.txt         总数  $(wc -l fofa.txt | awk '{print $1}')"
-    print_some
 
 }
 
@@ -195,7 +194,6 @@ osint_zoomeye(){
     cat zoomeye.txt.bak | sed 's/total\://g' > zoomeye.txt && rm -rf zoomeye.txt.bak
 
     Echo_INFOR "命令结果输出 : zoomeye.txt          总数  $(wc -l zoomeye.txt | awk '{print $1}')"
-    print_some
 
 }
 
@@ -224,7 +222,6 @@ osint_shodan(){
     cat shodan_demo.txt | sed s'/.$//' > shodan.txt && rm -rf shodan_demo.txt
 
     Echo_INFOR "命令结果输出 : shodan.txt           总数  $(wc -l shodan.txt | awk '{print $1}')"
-    print_some
 
 }
 
@@ -263,7 +260,6 @@ osint_quake(){
     rm -rf fofa_tmp
     Echo_INFOR "结果导出 (json): quake.json"
     Echo_INFOR "结果输出 (txt) : quake.txt         总数  $(wc -l quake.txt | awk '{print $1}')"
-    print_some
 
 }
 
@@ -295,7 +291,6 @@ osint_hunter(){
 
     Echo_INFOR "结果导出 (json): hunter.json"
     Echo_INFOR "结果导出 (txt) : hunter.txt         总数  $(wc -l hunter.txt | awk '{print $1}')"
-    print_some
 
 }
 
@@ -344,7 +339,7 @@ Help_Info(){
 
     echo -e ""
     echo -e "\033[1;34m|—— -chaos     [DOMAIN]              调用 chaos 查询接口\033[0m"
-    echo -e "\033[1;32m|———— ones -chaos baidu.com\033[0m"
+    echo -e "\033[1;32m|———— ones -chaos ffffffff0x.com\033[0m"
     echo -e "\033[1;34m|—— -fofa      [STRING] (num)        调用 Fofa 查询接口\033[0m"
     echo -e "\033[1;32m|———— ones -fofa 'tomcat' 100\033[0m"
     echo -e "\033[1;34m|—— -hunter    [STRING] (num)        调用 hunter 查询接口\033[0m"
