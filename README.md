@@ -41,7 +41,17 @@ ones -help
 
 **效果**
 
+![](./assets/img/1.png)
 
+> 注意 : 初始化不会安装 [chaos](https://github.com/projectdiscovery/chaos-client) ,请自行安装
+
+![](./assets/img/2.png)
+
+![](./assets/img/3.png)
+
+![](./assets/img/4.png)
+
+![](./assets/img/5.png)
 
 ---
 
