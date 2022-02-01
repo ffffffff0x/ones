@@ -1,0 +1,411 @@
+#!/bin/bash
+
+# ======================== !! NOTE !! ========================
+#  ________ ________ ________ ________ ________ ________ ________ ________ ________     ___    ___
+# |\  _____\\  _____\\  _____\\  _____\\  _____\\  _____\\  _____\\  _____\\   __  \   |\  \  /  /|
+# \ \  \__/\ \  \__/\ \  \__/\ \  \__/\ \  \__/\ \  \__/\ \  \__/\ \  \__/\ \  \|\  \  \ \  \/  / /
+#  \ \   __\\ \   __\\ \   __\\ \   __\\ \   __\\ \   __\\ \   __\\ \   __\\ \  \\\  \  \ \    / /
+#   \ \  \_| \ \  \_| \ \  \_| \ \  \_| \ \  \_| \ \  \_| \ \  \_| \ \  \_| \ \  \\\  \  /     \/
+#    \ \__\   \ \__\   \ \__\   \ \__\   \ \__\   \ \__\   \ \__\   \ \__\   \ \_______\/  /\   \
+#     \|__|    \|__|    \|__|    \|__|    \|__|    \|__|    \|__|    \|__|    \|_______/__/ /\ __\
+#                                                                                      |__|/ \|__|
+
+# ===================== 基础变量设置 =====================
+
+ones_Version="1.0.0 Dev(Beta1)"
+
+# ===================== 基础函数 =====================
+
+Echo_INFOR(){
+
+    echo -e "\033[1;36m$(date +"%H:%M:%S")\033[0m \033[1;32m[INFOR]\033[0m - \033[1;32m$1\033[0m"
+
+}
+
+Echo_ALERT(){
+
+    echo -e "\033[1;36m$(date +"%H:%M:%S")\033[0m \033[1;33m[ALERT]\033[0m - \033[1;33m$1\033[0m"
+
+}
+
+Echo_ERROR(){
+
+    echo -e "\033[1;36m$(date +"%H:%M:%S")\033[0m \033[1;31m[ERROR]\033[0m - \033[1;31m$1\n\033[0m"
+
+}
+
+Echo_ERROR2(){
+
+    Echo_ERROR "$name download failed, please check if the network is reachable, proxychains4 configuration is correct"
+
+}
+
+Echo_ERROR3(){
+
+    Echo_ERROR "$name installation failed"
+
+}
+
+Install_Switch(){
+
+    case $Linux_Version in
+        *"CentOS"*|*"RedHat"*|*"Fedora"*|*"AlmaLinux"*|*"VzLinux"*|*"Rocky"*)
+            yum install -y $1 1> /dev/null 2>> /dev/null && Echo_INFOR "Successfully installed $1 " || Echo_ERROR "$1 installation failed, please check the log /dev/null"
+            ;;
+        *"Kali"*|*"Ubuntu"*|*"Debian"*)
+            apt-get install -y $1 1> /dev/null 2>> /dev/null && Echo_INFOR "Successfully installed $1 " || Echo_ERROR "$1 installation failed, please check the log /dev/null"
+            ;;
+        *) ;;
+    esac
+
+}
+
+Install_Switch2(){
+
+    apt-get install -yq --no-install-recommends $1 1> /dev/null 2>> /dev/null && Echo_INFOR "Successfully installed $1 " || Echo_ERROR "$1 installation failed, please check the log /dev/null"
+
+}
+
+Install_Switch3(){
+
+    python2 -m pip install $1 > /dev/null 2>&1 && Echo_INFOR "Successfully installed $1 (python2)" || Echo_ERROR "$1 module installation failed, please try changing the pip proxy or check if python2 is installed!"
+
+}
+
+Install_Switch4(){
+
+    pip3 install $1 1> /dev/null 2>> /dev/null && Echo_INFOR "Successfully installed $1 (python3)" || Echo_ERROR "$1 module installation failed, please check the log /dev/null"
+
+}
+
+Install_Switch5(){
+
+    python3 -m pip install $1 1> /dev/null 2>> /dev/null && Echo_INFOR "Successfully installed $1 (python3)" || Echo_ERROR "$1 module installation failed, please check the log /dev/null"
+
+}
+
+print_some(){
+
+    echo -e ""
+    echo -e "\033[1;36m------------------------------------------------------------------------------------------\033[0m"
+    echo -e ""
+
+}
+
+# ===================== 检查模块 =====================
+
+check_null(){
+
+    if [ $1 ==  ] 2>> /dev/null
+    then
+        Echo_ERROR "输入不可为空"
+        exit 1
+    fi
+
+}
+
+check_conf(){
+
+    if test -e /root/ones.conf
+    then
+        sleep 0.001
+    else
+        Echo_ERROR "请创建 ones.conf 配置文件,并运行 -init 初始化环境"
+        exit 1
+    fi
+
+}
+
+# ===================== KEY设置 =====================
+
+init_key1(){
+
+    identify_fofa_email=`cat /root/ones.conf | jq .fofa_email | uniq | tr -d "\""`
+    identify_fofa_key=`cat /root/ones.conf | jq .fofa_key | uniq | tr -d "\""`
+    identify_chaos=`cat /root/ones.conf | jq .chaos_key | uniq | tr -d "\""`
+    identify_shodan_key=`cat /root/ones.conf | jq .shodan_key | uniq | tr -d "\""`
+    identify_quake_key=`cat /root/ones.conf | jq .quake_key | uniq | tr -d "\""`
+    identify_zoom_key=`cat /root/ones.conf | jq .zoom_key | uniq | tr -d "\""`
+    identify_hunter_key=`cat /root/ones.conf | jq .hunter_key | uniq | tr -d "\""`
+
+}
+
+Banner(){
+
+    # https://www.bootschool.net/ascii starwars 字体
+    echo -e "\033[1;34m   ______    __   __   _______     _______  \033[0m"
+    echo -e "\033[1;32m  /  __  \  |  \ |  | |   ____|   /       | \033[0m"
+    echo -e "\033[1;36m |  |  |  | |   \|  | |  |__     |   (----  \033[0m"
+    echo -e "\033[1;31m |  |  |  | |       | |   __|     \   \     \033[0m"
+    echo -e "\033[1;35m |   --   | |  |\   | |  |____  ---)   |    \033[0m"
+    echo -e "\033[1;33m  \______/  |__| \__| |_______||_______/     \n\033[0m"
+
+}
+
+osint_fofa(){
+
+    FOFA_STRING="$1"
+
+    if [ $2 ==  ] 2>> /dev/null
+    then
+        FOFA_SIZE="50"
+    else
+        FOFA_SIZE=$2
+    fi
+
+    echo -e "\033[1;33m\n>> 调用 Fofa 接口\n\033[0m"
+    Echo_INFOR "搜索语法 : ${FOFA_STRING}" && echo -e ""
+
+    ( echo "$FOFA_STRING" | base64 -w 0 ) > fofa_tmp
+
+    FOFA_TEMP=$(<fofa_tmp)
+
+    # https://fofa.info/static_pages/api_help
+    echo 'domain="fofa.info"' | base64 - | ( xargs -I{} curl "https://fofa.info/api/v1/search/all?email=${identify_fofa_email}&key=${identify_fofa_key}&qbase64={$FOFA_TEMP}&size={$FOFA_SIZE}&fields=host" > fofa.json )
+    cat fofa.json | jq '.results[]' > fofa.txt.bak
+    cat fofa.txt.bak | sed 's/\"//g' > fofa.txt && rm -rf fofa.txt.bak
+    rm -rf fofa_tmp
+    Echo_INFOR "结果导出 (json): fofa.json"
+    Echo_INFOR "结果输出 (txt) : fofa.txt         总数  $(wc -l fofa.txt | awk '{print $1}')"
+    print_some
+
+}
+
+osint_zoomeye(){
+
+    ZOOM_STRING="$1"
+
+    if [ $2 ==  ] 2>> /dev/null
+    then
+        ZOOM_SIZE="20"
+    else
+        ZOOM_SIZE=$2
+    fi
+
+    echo -e "\033[1;33m\n>> 调用 zoomeye 接口\n\033[0m"
+    Echo_INFOR "搜索语法 : ${ZOOM_STRING}"
+
+    # https://github.com/knownsec/ZoomEye-python
+    Echo_INFOR "当前 zoomeye API 剩余额度如下 :"
+    zoomeye info
+    echo -e ""
+    ( zoomeye search "${ZOOM_STRING}" -num ${ZOOM_SIZE} | awk '{print $1}' ) > zoomeye.txt
+
+    cat zoomeye.txt | sed 's/ip\:port//g' > zoomeye.txt.bak && rm -rf zoomeye.txt
+    cat zoomeye.txt.bak | sed 's/total\://g' > zoomeye.txt && rm -rf zoomeye.txt.bak
+
+    Echo_INFOR "命令结果输出 : zoomeye.txt          总数  $(wc -l zoomeye.txt | awk '{print $1}')"
+    print_some
+
+}
+
+osint_shodan(){
+
+    shodan_STRING="$1"
+
+    if [ $2 ==  ] 2>> /dev/null
+    then
+        shodan_SIZE="50"
+    else
+        shodan_SIZE=$2
+    fi
+
+    echo -e "\033[1;33m\n>> 调用 shodan 接口\n\033[0m"
+    Echo_INFOR "搜索语法 : ${shodan_STRING}"
+
+    # https://account.shodan.io/
+    # https://developer.shodan.io/dashboard
+    # https://developer.shodan.io/api
+    Echo_INFOR "当前 shodan API 剩余额度如下 :"
+    curl -X GET "https://api.shodan.io/api-info?key=${identify_shodan_key}"
+    echo -e "\n"
+    shodan search --fields ip_str,port {$shodan_STRING} --limit ${shodan_SIZE} --no-color --separator ":" > shodan_demo.txt
+
+    cat shodan_demo.txt | sed s'/.$//' > shodan.txt && rm -rf shodan_demo.txt
+
+    Echo_INFOR "命令结果输出 : shodan.txt           总数  $(wc -l shodan.txt | awk '{print $1}')"
+    print_some
+
+}
+
+osint_quake(){
+
+    quake_STRING="$1"
+
+    if [ $2 ==  ] 2>> /dev/null
+    then
+        quake_SIZE="50"
+    else
+        quake_SIZE=$2
+    fi
+
+    echo -e "\033[1;33m\n>> 调用 quake 接口\n\033[0m"
+    Echo_INFOR "搜索语法 : ${quake_STRING}"
+
+    # https://quake.360.cn/quake/#/personal?tab=file
+    # https://quake.360.cn/quake/#/help
+    Echo_INFOR "当前 quake API 剩余额度如下 :"
+    curl -X GET "https://quake.360.cn/api/v3/user/info" -H "X-QuakeToken: ${identify_quake_key}" --silent > quake_api.json
+    echo -e "月度积分 : $(cat quake_api.json | jq .data.credit)"
+    echo -e "长效积分 : $(cat quake_api.json | jq .data.persistent_credit)\n"
+
+    rm -rf quake_api.json
+    curl -X POST -H "X-QuakeToken: ${identify_quake_key}" -H "Content-Type: application/json" https://quake.360.cn/api/v3/search/quake_service -d "{
+        \"query\": \"${quake_STRING}\",
+        \"start\": 0,
+        \"size\": \"${quake_SIZE}\",
+        \"latest\": \"true\",
+        \"include\": [\"ip\",\"port\"]
+        }" --silent > quake.json
+
+    cat quake.json | jq '.data[]' | jq '.ip+":"+(.port|tostring)' > quake.txt.bak
+    cat quake.txt.bak | sed 's/\"//g' > quake.txt && rm -rf quake.txt.bak
+    rm -rf fofa_tmp
+    Echo_INFOR "结果导出 (json): quake.json"
+    Echo_INFOR "结果输出 (txt) : quake.txt         总数  $(wc -l quake.txt | awk '{print $1}')"
+    print_some
+
+}
+
+osint_hunter(){
+
+    hunter_STRING="$1"
+
+    if [ $2 ==  ] 2>> /dev/null
+    then
+        hunter_SIZE="50"
+    else
+        hunter_SIZE=$2
+    fi
+
+    echo -e "\033[1;33m\n>> 调用 hunter 接口\033[0m"
+    Echo_INFOR "搜索语法 : ${hunter_STRING}"
+
+    ( echo "$hunter_STRING" | base64 -w 0 ) > hunter_tmp
+
+    hunter_TEMP=$(<hunter_tmp)
+
+    # https://hunter.qianxin.com/home/helpCenter
+    curl -X GET -k "https://hunter.qianxin.com/openApi/search?api-key=${identify_hunter_key}&search=${hunter_TEMP}&page=1&page_size=${hunter_SIZE}" --silent > hunter.json
+
+    Echo_INFOR "$(jq '.data.rest_quota' hunter.json | sed 's/\"//g')"
+
+    cat hunter.json | jq '.data.arr[]' | jq '.ip+":"+(.port|tostring)' > hunter.txt.bak
+    cat hunter.txt.bak | sed 's/\"//g' > hunter.txt && rm -rf hunter.txt.bak
+
+    Echo_INFOR "结果导出 (json): hunter.json"
+    Echo_INFOR "结果导出 (txt) : hunter.txt         总数  $(wc -l hunter.txt | awk '{print $1}')"
+    print_some
+
+}
+
+osint_chaos(){
+
+    # https://github.com/projectdiscovery/chaos-client
+    chaos -silent -key $identify_chaos -d $1 -o chaos.txt
+    echo -e ""
+    Echo_INFOR "域名结果输出 : chaos.txt          总数  $(wc -l chaos.txt | awk '{print $1}')"
+
+}
+
+# -init
+init_func(){
+
+    # init ZOOM_KEY
+    echo -e "\033[1;33m>> 配置 zoomeye 环境\n\033[0m"
+
+    zoomeye -h > /dev/null 2>&1
+    if [ $? == 0 ]
+    then
+        zoomeye init -apikey "${identify_zoom_key}"
+    else
+        Install_Switch4 "zoomeye"
+        zoomeye init -apikey "${identify_zoom_key}"
+    fi
+
+    print_some
+
+    # init shodan_KEY
+    echo -e "\033[1;33m>> 配置 shodan 环境\n\033[0m"
+
+    $Porxy_OK shodan -h > /dev/null 2>&1
+    if [ $? == 0 ]
+    then
+        shodan init "${identify_shodan_key}"
+    else
+        Install_Switch4 "shodan"
+        shodan init "${identify_shodan_key}"
+    fi
+
+}
+
+# -help
+Help_Info(){
+
+    echo -e ""
+    echo -e "\033[1;34m|—— -chaos     [DOMAIN]              调用 chaos 查询接口\033[0m"
+    echo -e "\033[1;32m|———— ones -chaos baidu.com\033[0m"
+    echo -e "\033[1;34m|—— -fofa      [STRING] (num)        调用 Fofa 查询接口\033[0m"
+    echo -e "\033[1;32m|———— ones -fofa 'tomcat' 100\033[0m"
+    echo -e "\033[1;34m|—— -hunter    [STRING] (num)        调用 hunter 查询接口\033[0m"
+    echo -e "\033[1;32m|———— ones -hunter 'tomcat' 100\033[0m"
+    echo -e "\033[1;34m|—— -quake     [STRING] (num)        调用 quake 查询接口\033[0m"
+    echo -e "\033[1;32m|———— ones -quake 'tomcat' 100\033[0m"
+    echo -e "\033[1;34m|—— -zoom      [STRING] (num)        调用 Zoomeye 查询接口\033[0m"
+    echo -e "\033[1;32m|———— ones -zoom 'tomcat' 100\033[0m"
+    echo -e "\033[1;34m|—— -shodan    [STRING] (num)        调用 shodan 查询接口\033[0m"
+    echo -e "\033[1;32m|———— ones -shodan 'tomcat' 100\033[0m"
+    echo -e "\ncreate by ffffffff0x"
+
+}
+
+case "$1" in
+    -fofa)
+        check_conf
+        init_key1
+        osint_fofa "$2" "$3"
+        ;;
+    -zoom)
+        check_conf
+        init_key1
+        osint_zoomeye "$2" "$3"
+        ;;
+    -shodan)
+        check_conf
+        init_key1
+        osint_shodan "$2" "$3"
+        ;;
+    -quake)
+        check_conf
+        init_key1
+        osint_quake "$2" "$3"
+        ;;
+    -hunter)
+        check_conf
+        init_key1
+        osint_hunter "$2" "$3"
+        ;;
+    -chaos)
+        check_conf
+        init_key1
+        osint_chaos "$2" "$3"
+        ;;
+    -h | h | -help | help)
+        printf "\033c"
+        Help_Info
+        exit 1
+        ;;
+    -init | init)
+        check_conf
+        init_key1
+        init_func
+        ;;
+    *)
+        Banner
+        echo -e "\033[1;32mones 当前版本 :\033[0m \033[1;35m$ones_Version \033[0m"
+        echo -e "\n\033[1;34m使用 -h/-help 选项查看帮助文档\033[0m"
+        exit 1
+        ;;
+esac
+
+echo -e "\033[1;36m \n-----OVER-----\n \033[0m"
