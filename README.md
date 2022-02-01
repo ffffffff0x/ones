@@ -8,7 +8,7 @@
 
 **1. 下载**
 ```bash
-wget -O f8x https://f8x.io/ones && mv --force ones /usr/local/bin/ones && chmod +x /usr/local/bin/ones
+wget -O ones https://f8x.io/ones && mv --force ones /usr/local/bin/ones && chmod +x /usr/local/bin/ones
 ```
 
 
@@ -35,6 +35,21 @@ EOF
 ```
 
 **4. 使用**
+
 ```bash
 ./ones -help
 ```
+
+**效果**
+
+
+
+---
+
+## License
+
+[Apache License 2.0](https://github.com/ffffffff0x/name-fuzz/blob/main/LICENSE)
+
+---
+
+> create by ffffffff0x
