@@ -11,10 +11,9 @@
 wget -O ones https://f8x.io/ones && mv --force ones /usr/local/bin/ones && chmod +x /usr/local/bin/ones
 ```
 
-
 **2. 创建配置文件**
 
-将下方字段中的 key 改为你自己的
+将下方字段中的 key 改为你自己的,如果不填就保留默认的 xxxx
 ```bash
 tee /root/ones.conf <<-'EOF'
 {
@@ -31,13 +30,13 @@ EOF
 
 **3. 初始化环境**
 ```bash
-./ones -init
+ones -init
 ```
 
 **4. 使用**
 
 ```bash
-./ones -help
+ones -help
 ```
 
 **效果**
