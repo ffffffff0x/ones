@@ -28,6 +28,22 @@ tee /root/ones.conf <<-'EOF'
 EOF
 ```
 
+- zoomeye API-KEY
+    - https://www.zoomeye.org/profile
+    - ![](./assets/img/6.png)
+
+- shodan API-KEY
+    - https://account.shodan.io/
+    - ![](./assets/img/7.png)
+
+- quake API-KEY
+    - https://quake.360.cn/quake/#/personal
+    - ![](./assets/img/8.webp)
+
+- hunter API-KEY
+    - https://hunter.qianxin.com/home/userInfo
+    - ![](./assets/img/9.png)
+
 **3. 初始化环境**
 ```bash
 ones -init
