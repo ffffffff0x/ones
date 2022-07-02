@@ -1,10 +1,66 @@
 # ones
 
-可用于多个网络资产测绘引擎 API 的命令行查询工具
+可用于多个网络资产测绘引擎 API 的命令行查询工具,写个2个版本,一个 go 版本,一个 bash shell 脚本的版本
 
 ---
 
 ## 开始
+
+### go 版本使用
+
+**1. 下载**
+- 从 [releases](https://github.com/ffffffff0x/ones/releases) 进行下载
+
+**2. 创建配置文件**
+
+将下方字段中的 key 改为你自己的,如果不填就保留默认的 xxxx
+```bash
+tee ones.conf <<-'EOF'
+{
+  "fofa_email": "changme@163.com",
+  "fofa_key": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+  "zoom_key": "xxxxxxxx-xxxx-xxxxx-xxxx-xxxxxxxxxx",
+  "shodan_key": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+  "quake_key": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxx",
+  "hunter_key": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+  "chaos_key": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+}
+EOF
+```
+
+**3. 使用**
+
+```bash
+ones -help
+```
+
+ones 支持以下选项
+```bash
+Usage:
+    ones [flags]
+
+INPUT:
+    -fofa string
+    -quake string
+    -zoom string    (还没适配好)
+    -shodan string  (还没适配好)
+    -hunter string
+    -chaos string
+
+OUTPUT:
+    -json string
+    -txt string
+
+CONFIGURATIONS:
+    -num int
+
+OPTIMIZATIONS:
+    -format string
+```
+
+---
+
+### bash shell 版本使用
 
 **1. 下载**
 ```bash
@@ -28,46 +84,52 @@ tee /root/ones.conf <<-'EOF'
 EOF
 ```
 
-- zoomeye API-KEY
-    - https://www.zoomeye.org/profile
-    - ![](./assets/img/6.png)
-
-- shodan API-KEY
-    - https://account.shodan.io/
-    - ![](./assets/img/7.png)
-
-- quake API-KEY
-    - https://quake.360.cn/quake/#/personal
-    - ![](./assets/img/8.webp)
-
-- hunter API-KEY
-    - https://hunter.qianxin.com/home/userInfo
-    - ![](./assets/img/9.png)
-
 **3. 初始化环境**
 ```bash
 ones -init
 ```
 
+> 注意 : 初始化不会安装 [chaos](https://github.com/projectdiscovery/chaos-client) ,请自行安装
+
 **4. 使用**
 
 ```bash
 ones -help
+
+ones -fofa 'app="tomcat"' 100
+ones -quake 'tomcat' 100
+ones -zoom 'tomcat' 100
+ones -shodan 'tomcat' 100
+ones -hunter 'tomcat' 100
+ones -chaos 'ffffffff0x.com'
 ```
 
-**效果**
+---
 
-![](./assets/img/1.png)
+## API-KEY 的获取
 
-> 注意 : 初始化不会安装 [chaos](https://github.com/projectdiscovery/chaos-client) ,请自行安装
+- fofa API-KEY
+    - https://fofa.info/api
+    - ![](./img/10.png)
 
-![](./assets/img/2.png)
+- zoomeye API-KEY
+    - https://www.zoomeye.org/profile
+    - ![](./img/6.png)
 
-![](./assets/img/3.png)
+- shodan API-KEY
+    - https://account.shodan.io/
+    - ![](./img/7.png)
 
-![](./assets/img/4.png)
+- quake API-KEY
+    - https://quake.360.cn/quake/#/personal
+    - ![](./img/8.webp)
 
-![](./assets/img/5.png)
+- hunter API-KEY
+    - https://hunter.qianxin.com/home/userInfo
+    - ![](./img/9.png)
+
+- chaos API-KEY
+    - https://chaos.projectdiscovery.io/
 
 ---
 
