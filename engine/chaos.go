@@ -1,0 +1,46 @@
+package engine
+
+import (
+	"encoding/json"
+	"fmt"
+	"github.com/valyala/fasthttp"
+	ones "ones/mod"
+	"os"
+	"reflect"
+)
+
+// https://github.com/projectdiscovery/chaos-client/blob/master/pkg/chaos/chaos.go
+
+func TodoChaos() (string, []string) {
+
+	ChaosKeyValue := string(ones.Confs["chaos_key"])
+	ChaosKeyValue = ChaosKeyValue[1 : len(ChaosKeyValue)-1]
+
+	url := fmt.Sprintf("https://dns.projectdiscovery.io/dns/%s/subdomains", ones.Chaos)
+
+	req := &fasthttp.Request{}
+	req.SetRequestURI(url)
+	req.Header.SetMethod("GET")
+	req.Header.Add("Authorization", ChaosKeyValue)
+
+	resp := &fasthttp.Response{}
+
+	client := &fasthttp.Client{}
+	if err := client.Do(req, resp); err != nil {
+		fmt.Println("请求失败:", err.Error())
+		os.Exit(3)
+	}
+
+	var obj map[string]interface{}
+	_ = json.Unmarshal(resp.Body(), &obj)
+
+	v := reflect.ValueOf(obj["subdomains"])
+	count := v.Len()
+	for i := 0; i < count; i++ {
+		resp2 = append(resp2, fmt.Sprint(v.Index(i))+"."+ones.Chaos)
+	}
+
+	//fmt.Println(string(resp.Body()))
+	return string(resp.Body()), resp2
+
+}
