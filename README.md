@@ -28,7 +28,7 @@ tee ones.conf <<-'EOF'
 EOF
 ```
 
-**3. 使用**
+**3. 支持选项**
 
 ```bash
 ones -help
@@ -40,23 +40,50 @@ Usage:
     ones [flags]
 
 INPUT:
-    -fofa string
-    -quake string
-    -zoom string    (还没适配好)
-    -shodan string  (还没适配好)
-    -hunter string
-    -chaos string
+    -fofa string        fofa 查询
+    -quake string       quake 查询
+    -zoom string        zoomeye 查询 (还没适配好)
+    -shodan string      shodan 查询 (还没适配好)
+    -hunter string      huneter 查询
+    -chaos string       chaos 查询
 
 OUTPUT:
-    -json string
-    -txt string
+    -json string        导出 json 格式 (源格式,无处理)
+    -txt string         导出 txt 格式 (ip:port 格式,经过处理)
 
 CONFIGURATIONS:
-    -num int
-
-OPTIMIZATIONS:
-    -format string
+    -num int            查询数量 (默认100)
 ```
+
+**4. 使用**
+
+查询案例,fofa 查询 tomcat,只查询20个,默认输出
+```bash
+./ones -fofa 'app="APACHE-Tomcat"' -num 20
+```
+
+![](./img/11.png)
+
+fofa 查询 tomcat,只查询15个,输出 json 格式的数据到 output123.json 中
+```bash
+./ones -fofa 'app="APACHE-Tomcat"' -num 15 -json output123.json
+```
+
+![](./img/12.png)
+
+quake 查询 shiro ,查询10个,输出 txt 格式的数据到 output321.txt 中,输出 json 格式的数据到 output123.json 中
+```bash
+./ones -quake 'app:"Shiro权限管理系统"' -num 10 -txt output321.txt -json output123.json
+```
+
+![](./img/13.png)
+
+同时查询 fofa 和 quake 的 shiro ,输出 txt 到 all.txt 中 (注意: 查询多个引擎时,不可导出为 json)
+```bash
+./ones -fofa 'app="APACHE-Shiro"' -quake 'app:"Shiro权限管理系统"' -txt all.txt
+```
+
+![](./img/14.png)
 
 ---
 
