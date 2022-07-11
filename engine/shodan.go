@@ -1,13 +1,75 @@
 package engine
 
 import (
+	"encoding/json"
 	"fmt"
+	"github.com/valyala/fasthttp"
 	ones "ones/mod"
+	"os"
+	"strconv"
+	"sync"
 )
 
-func TodoShodan() {
+var TmpSlice1 []string
+var SumSlice1 []string
+
+func TodoShodan() []string {
 
 	ShodanKeyValue := string(ones.Confs["shodan_key"])
-	fmt.Println(ShodanKeyValue[1 : len(ShodanKeyValue)-1])
+	ShodanKeyValue = ShodanKeyValue[1 : len(ShodanKeyValue)-1]
+	//fmt.Println(ShodanKeyValue[1 : len(ShodanKeyValue)-1])
+
+	num := 0
+	if ones.Num <= 0 {
+		num = 100
+	} else {
+		num = ones.Num
+	}
+
+	maxPage := num / 100
+
+	if num%100 > 0 {
+		maxPage++
+	}
+
+	wg := &sync.WaitGroup{}
+	for keyword := 1; keyword <= maxPage; keyword++ {
+		wg.Add(1)
+		go func(keyword int, group *sync.WaitGroup) {
+			TmpSlice := SendReq1(ShodanKeyValue, keyword)
+			SumSlice1 = append(TmpSlice)
+			group.Done()
+		}(keyword, wg)
+	}
+	wg.Wait()
+
+	//fmt.Println(string(resp))
+	return SumSlice1
+
+}
+
+func SendReq1(key string, num int) []string {
+
+	url := fmt.Sprintf("https://api.shodan.io/shodan/host/search?key=%s&query=%d", key, num)
+	//fmt.Println(url)
+
+	status, resp, err := fasthttp.Get(nil, url)
+	if err != nil {
+		fmt.Println("请求失败:", err.Error())
+		os.Exit(3)
+	}
+	if status != fasthttp.StatusOK {
+		fmt.Println("请求没有成功:", status)
+		os.Exit(3)
+	}
+
+	var shodan ones.ShodanInfo
+	_ = json.Unmarshal(resp, &shodan)
+
+	for _, v := range shodan.Matches {
+		resp2 = append(resp2, v.IPStr+":"+strconv.Itoa(v.Port))
+	}
+
+	return resp2
 
 }

@@ -27,10 +27,12 @@ func OutputProcess() {
 		HostSlice = append(TmpSlice)
 	}
 	if ones.Shodan != "" {
-		onese.TodoShodan()
+		TmpSlice = onese.TodoShodan()
+		HostSlice = append(TmpSlice)
 	}
 	if ones.Zoomeye != "" {
-		onese.TodoZoomeye()
+		TmpSlice = onese.TodoZoomeye()
+		HostSlice = append(TmpSlice)
 	}
 	if ones.Chaos != "" {
 		AllJson, TmpSlice = onese.TodoChaos()

@@ -42,8 +42,8 @@ Usage:
 INPUT:
     -fofa string        fofa 查询
     -quake string       quake 查询
-    -zoom string        zoomeye 查询 (还没适配好)
-    -shodan string      shodan 查询 (还没适配好)
+    -zoom string        zoomeye 查询 (不支持json导出)
+    -shodan string      shodan 查询 (不支持json导出)
     -hunter string      huneter 查询
     -chaos string       chaos 查询
 
