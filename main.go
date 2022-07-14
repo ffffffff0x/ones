@@ -16,6 +16,7 @@ func main() {
 
 	if ones.V {
 		fmt.Println(ones.Version)
+		os.Exit(0) // 输出版本后停止
 	}
 
 	// 解析配置
@@ -55,6 +56,8 @@ func InputNum() {
 		} else {
 			utils.OutputProcess()
 		}
+	} else if InNum == 0 { // 无参数输出Help
+		flag.Usage()
 	} else {
 		utils.OutputProcess()
 	}

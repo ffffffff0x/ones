@@ -12,14 +12,19 @@ import (
 
 // # https://hunter.qianxin.com/home/helpCenter
 
+var hunterRecursion = 0
+
 func TodoHunter() (string, []string) {
+	hunterRecursion += 1
+	if hunterRecursion % ones.Recursion == 0 {
+		return "", nil
+	}
 
 	byte1 := []byte(ones.Hunter)
 	base64str := base64.StdEncoding.EncodeToString(byte1)
 	//fmt.Println(base64str)
 
-	HunterKeyValue := string(ones.Confs["hunter_key"])
-	HunterKeyValue = HunterKeyValue[1 : len(HunterKeyValue)-1]
+	HunterKeyValue := ones.GetToken("hunter")
 	//fmt.Println(HunterKeyValue[1 : len(HunterKeyValue)-1])
 
 	url := fmt.Sprintf("https://hunter.qianxin.com/openApi/search?api-key=%s&search=%s&page=1&page_size=%d", HunterKeyValue, base64str, ones.Num)
@@ -38,6 +43,10 @@ func TodoHunter() (string, []string) {
 	err = json.Unmarshal(resp, &hunter)
 	if err != nil {
 		fmt.Println(err.Error())
+	}
+
+	if hunter.Code == 401 {
+		return TodoHunter()
 	}
 
 	for _, v := range hunter.Data.Arr {
