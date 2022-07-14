@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/valyala/fasthttp"
+	"log"
 	ones "ones/mod"
 	"os"
 	"reflect"
@@ -39,6 +40,7 @@ func TodoChaos() (string, []string) {
 	_ = json.Unmarshal(resp.Body(), &obj)
 
 	if obj["error"].(string) == "invalid token" {
+		log.Println("chaos token 疑似失效", ChaosKeyValue)
 		return TodoChaos()
 	}
 

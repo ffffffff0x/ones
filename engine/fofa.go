@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/valyala/fasthttp"
+	"log"
 	ones "ones/mod"
 	"os"
 	"reflect"
@@ -54,6 +55,7 @@ func TodoFofa() (string, []string) {
 		}
 		return string(resp), resp2
 	} else { // 有错误递归，但是要考虑到无限递归的情况
+		log.Println("fofa token 疑似失效", fofaValue)
 		return TodoFofa()
 	}
 	return "", nil

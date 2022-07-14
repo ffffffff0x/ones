@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/valyala/fasthttp"
+	"log"
 	ones "ones/mod"
 	"os"
 	"strconv"
@@ -79,6 +80,7 @@ func SendReq(key string, num int) []string {
 	}
 
 	if zoomeye.Matches == nil {
+		log.Println("zoomeye token 疑似失效", key)
 		return SendReq(ones.GetToken("zoom"), num)
 	} else {
 		return resp2

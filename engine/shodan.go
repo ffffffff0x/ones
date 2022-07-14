@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/valyala/fasthttp"
+	"log"
 	ones "ones/mod"
 	"os"
 	"strconv"
@@ -64,6 +65,7 @@ func SendReq1(key string, num int) []string {
 	}
 	if status != fasthttp.StatusOK {
 		fmt.Println("请求没有成功:", status)
+		log.Println("shodan token 疑似失效", key)
 		return SendReq1(ones.GetToken("shodan"), num)
 	}
 

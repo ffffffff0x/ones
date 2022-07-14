@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/valyala/fasthttp"
+	"log"
 	ones "ones/mod"
 	"os"
 	"strconv"
@@ -46,6 +47,7 @@ func TodoHunter() (string, []string) {
 	}
 
 	if hunter.Code == 401 {
+		log.Println("hunter token 疑似失效", HunterKeyValue)
 		return TodoHunter()
 	}
 

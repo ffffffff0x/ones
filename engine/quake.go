@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/valyala/fasthttp"
+	"log"
 	ones "ones/mod"
 	"os"
 	"strconv"
@@ -48,6 +49,7 @@ func TodoQuake() (string, []string) {
 	var serviceInfo ones.ServiceInfo
 	err := json.Unmarshal(resp.Body(), &serviceInfo)
 	if err != nil {
+		log.Println("quake token 疑似失效", QuakeKeyValue)
 		return TodoQuake()
 	}
 	if serviceInfo.Code != 0 {
