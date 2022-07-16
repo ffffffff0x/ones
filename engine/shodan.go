@@ -44,7 +44,6 @@ func TodoShodan() []string {
 	}
 	wg.Wait()
 
-	//fmt.Println(string(resp))
 	return SumSlice1
 
 }
@@ -68,6 +67,8 @@ func SendReq1(key string, num int) []string {
 		log.Println("shodan token 疑似失效", key)
 		return SendReq1(ones.GetToken("shodan"), num)
 	}
+
+	//fmt.Println(string(resp))
 
 	var shodan ones.ShodanInfo
 	_ = json.Unmarshal(resp, &shodan)

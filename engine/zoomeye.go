@@ -44,11 +44,11 @@ func TodoZoomeye() []string {
 	}
 	wg.Wait()
 
-	//fmt.Println(string(resp.Body()))
 	return SumSlice
 
 }
 
+// SendReq https://www.zoomeye.org/doc
 func SendReq(key string, num int) []string {
 	zoomeyeRecursion += 1
 	if zoomeyeRecursion % ones.Recursion == 0 {
@@ -71,6 +71,8 @@ func SendReq(key string, num int) []string {
 		os.Exit(3)
 	}
 
+	//fmt.Println(string(resp.Body()))
+
 	var zoomeye ones.ZoomInfo
 	_ = json.Unmarshal(resp.Body(), &zoomeye)
 
@@ -84,6 +86,5 @@ func SendReq(key string, num int) []string {
 	} else {
 		return resp2
 	}
-
 
 }
