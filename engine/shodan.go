@@ -55,7 +55,7 @@ func SendReq1(key string, num int) []string {
 		return nil
 	}
 
-	url := fmt.Sprintf("https://api.shodan.io/shodan/host/search?key=%s&query=%d", key, num)
+	url := fmt.Sprintf("https://api.shodan.io/shodan/host/search?key=%s&page=%d&query=%s", key, num, ones.Shodan)
 	//fmt.Println(url)
 
 	status, resp, err := fasthttp.Get(nil, url)

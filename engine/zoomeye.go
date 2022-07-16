@@ -18,7 +18,6 @@ var zoomeyeRecursion = 0
 func TodoZoomeye() []string {
 
 	ZoomKeyValue := ones.GetToken("zoom")
-	ZoomKeyValue = ZoomKeyValue[1 : len(ZoomKeyValue)-1]
 	//fmt.Println(ZoomKeyValue)
 
 	num := 0
