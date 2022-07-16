@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/valyala/fasthttp"
+	"log"
 	ones "ones/mod"
 	"os"
 	"strconv"
@@ -12,11 +13,11 @@ import (
 
 var TmpSlice []string
 var SumSlice []string
+var zoomeyeRecursion = 0
 
 func TodoZoomeye() []string {
 
-	ZoomKeyValue := string(ones.Confs["zoom_key"])
-	ZoomKeyValue = ZoomKeyValue[1 : len(ZoomKeyValue)-1]
+	ZoomKeyValue := ones.GetToken("zoom")
 	//fmt.Println(ZoomKeyValue)
 
 	num := 0
@@ -49,6 +50,11 @@ func TodoZoomeye() []string {
 }
 
 func SendReq(key string, num int) []string {
+	zoomeyeRecursion += 1
+	if zoomeyeRecursion % ones.Recursion == 0 {
+		return nil
+	}
+
 	url := fmt.Sprintf("https://api.zoomeye.org/host/search?query=%s&page=%d", ones.Zoomeye, num)
 	//fmt.Println(url)
 
@@ -72,6 +78,12 @@ func SendReq(key string, num int) []string {
 		resp2 = append(resp2, v.IP+":"+strconv.Itoa(v.Portinfo.Port))
 	}
 
-	return resp2
+	if zoomeye.Matches == nil {
+		log.Println("zoomeye token 疑似失效", key)
+		return SendReq(ones.GetToken("zoom"), num)
+	} else {
+		return resp2
+	}
+
 
 }

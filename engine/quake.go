@@ -4,15 +4,21 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/valyala/fasthttp"
+	"log"
 	ones "ones/mod"
 	"os"
 	"strconv"
 )
 
-func TodoQuake() (string, []string) {
+var quakeRecursion = 0
 
-	QuakeKeyValue := string(ones.Confs["quake_key"])
-	QuakeKeyValue = QuakeKeyValue[1 : len(QuakeKeyValue)-1]
+func TodoQuake() (string, []string) {
+	quakeRecursion += 1
+	if quakeRecursion % ones.Recursion == 0 {
+		return "", nil
+	}
+
+	QuakeKeyValue := ones.GetToken("quake")
 	//fmt.Println(QuakeKeyValue)
 
 	url := `https://quake.360.cn/api/v3/search/quake_service`
@@ -43,7 +49,8 @@ func TodoQuake() (string, []string) {
 	var serviceInfo ones.ServiceInfo
 	err := json.Unmarshal(resp.Body(), &serviceInfo)
 	if err != nil {
-		os.Exit(3)
+		log.Println("quake token 疑似失效", QuakeKeyValue)
+		return TodoQuake()
 	}
 	if serviceInfo.Code != 0 {
 		os.Exit(3)

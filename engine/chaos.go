@@ -4,17 +4,22 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/valyala/fasthttp"
+	"log"
 	ones "ones/mod"
 	"os"
 	"reflect"
 )
 
+var chaosRecursion = 0
 // https://github.com/projectdiscovery/chaos-client/blob/master/pkg/chaos/chaos.go
 
 func TodoChaos() (string, []string) {
+	chaosRecursion += 1
+	if chaosRecursion % ones.Recursion == 0 {
+		return "", nil
+	}
 
-	ChaosKeyValue := string(ones.Confs["chaos_key"])
-	ChaosKeyValue = ChaosKeyValue[1 : len(ChaosKeyValue)-1]
+	ChaosKeyValue := ones.GetToken("chaos")
 
 	url := fmt.Sprintf("https://dns.projectdiscovery.io/dns/%s/subdomains", ones.Chaos)
 
@@ -33,6 +38,11 @@ func TodoChaos() (string, []string) {
 
 	var obj map[string]interface{}
 	_ = json.Unmarshal(resp.Body(), &obj)
+
+	if obj["error"].(string) == "invalid token" {
+		log.Println("chaos token 疑似失效", ChaosKeyValue)
+		return TodoChaos()
+	}
 
 	v := reflect.ValueOf(obj["subdomains"])
 	count := v.Len()

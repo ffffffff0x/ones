@@ -14,6 +14,7 @@ var (
 	Version = "v1.0.0"
 	Json    string
 	Txt     string
+	Recursion int
 )
 
 func init() {
@@ -28,5 +29,6 @@ func init() {
 	flag.IntVar(&Num, "num", 100, "数量")
 	flag.StringVar(&Json, "json", "", "导出json格式")
 	flag.StringVar(&Txt, "txt", "", "导出txt格式")
+	flag.IntVar(&Recursion, "recursion", 5, "每个接口最多递归几层（遇到错误的API会进行递归）")
 
 }

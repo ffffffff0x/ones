@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/valyala/fasthttp"
+	"log"
 	ones "ones/mod"
 	"os"
 	"strconv"
@@ -12,11 +13,11 @@ import (
 
 var TmpSlice1 []string
 var SumSlice1 []string
+var shodanRecursion = 0
 
 func TodoShodan() []string {
 
-	ShodanKeyValue := string(ones.Confs["shodan_key"])
-	ShodanKeyValue = ShodanKeyValue[1 : len(ShodanKeyValue)-1]
+	ShodanKeyValue := ones.GetToken("shodan")
 	//fmt.Println(ShodanKeyValue[1 : len(ShodanKeyValue)-1])
 
 	num := 0
@@ -49,8 +50,12 @@ func TodoShodan() []string {
 }
 
 func SendReq1(key string, num int) []string {
+	shodanRecursion += 1
+	if shodanRecursion % ones.Recursion == 0 {
+		return nil
+	}
 
-	url := fmt.Sprintf("https://api.shodan.io/shodan/host/search?key=%s&query=%d", key, num)
+	url := fmt.Sprintf("https://api.shodan.io/shodan/host/search?key=%s&page=%d&query=%s", key, num, ones.Shodan)
 	//fmt.Println(url)
 
 	status, resp, err := fasthttp.Get(nil, url)
@@ -60,7 +65,8 @@ func SendReq1(key string, num int) []string {
 	}
 	if status != fasthttp.StatusOK {
 		fmt.Println("请求没有成功:", status)
-		os.Exit(3)
+		log.Println("shodan token 疑似失效", key)
+		return SendReq1(ones.GetToken("shodan"), num)
 	}
 
 	var shodan ones.ShodanInfo
@@ -69,7 +75,6 @@ func SendReq1(key string, num int) []string {
 	for _, v := range shodan.Matches {
 		resp2 = append(resp2, v.IPStr+":"+strconv.Itoa(v.Port))
 	}
-
 	return resp2
 
 }
