@@ -15,17 +15,58 @@
 
 将下方字段中的 key 改为你自己的,如果不填就保留默认的 xxxx
 ```bash
-tee ones.conf <<-'EOF'
+tee ones-config.json <<-'EOF'
 {
-  "fofa_email": "changme@163.com",
-  "fofa_key": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-  "zoom_key": "xxxxxxxx-xxxx-xxxxx-xxxx-xxxxxxxxxx",
-  "shodan_key": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-  "quake_key": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxx",
-  "hunter_key": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-  "chaos_key": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  "fofa_key": [
+    "changme@163.com:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  ],
+  "zoom_key": [
+    "xxxxxxxx-xxxx-xxxxx-xxxx-xxxxxxxxxx"
+  ],
+  "shodan_key": [
+    "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  ],
+  "quake_key": [
+    "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxx"
+  ],
+  "hunter_key": [
+    "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  ],
+  "chaos_key": [
+    "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  ]
 }
 EOF
+```
+
+ones 支持加载多密钥配置,格式如下
+```bash
+{
+  "fofa_key": [
+    "changme@163.com:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    "changme2@163.com:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  ],
+  "zoom_key": [
+    "xxxxxxxx-xxxx-xxxxx-xxxx-xxxxxxxxxx",
+    "xxxxxxxx-xxxx-xxxxx-xxxx-xxxxxxxxxx"
+  ],
+  "shodan_key": [
+    "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  ],
+  "quake_key": [
+    "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxx",
+    "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxx"
+  ],
+  "hunter_key": [
+    "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  ],
+  "chaos_key": [
+    "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  ]
+}
 ```
 
 **3. 支持选项**
