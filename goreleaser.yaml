@@ -1,6 +1,6 @@
 project_name: ones
 builds:
-  - binary: main
+  - binary: ones
     goos:
       - linux
       - windows
