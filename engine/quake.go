@@ -14,7 +14,7 @@ var quakeRecursion = 0
 
 func TodoQuake() (string, []string) {
 	quakeRecursion += 1
-	if quakeRecursion % ones.Recursion == 0 {
+	if quakeRecursion%ones.Recursion == 0 {
 		return "", nil
 	}
 
@@ -45,7 +45,7 @@ func TodoQuake() (string, []string) {
 		fmt.Println("请求失败:", err.Error())
 		os.Exit(3)
 	}
-
+	//fmt.Println(string(resp.Body()))
 	var serviceInfo ones.ServiceInfo
 	err := json.Unmarshal(resp.Body(), &serviceInfo)
 	if err != nil {

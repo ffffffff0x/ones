@@ -3,17 +3,17 @@ package mod
 import "flag"
 
 var (
-	V       bool
-	Fofa    string
-	Quake   string
-	Shodan  string
-	Chaos   string
-	Zoomeye string
-	Hunter  string
-	Num     int
-	Version = "v1.0.0"
-	Json    string
-	Txt     string
+	V         bool
+	Fofa      string
+	Quake     string
+	Shodan    string
+	Chaos     string
+	Zoomeye   string
+	Hunter    string
+	Num       int
+	Version   = "v1.0.4"
+	Json      string
+	Txt       string
 	Recursion int
 )
 

@@ -23,7 +23,7 @@ func OutputProcess() {
 		HostSlice = append(TmpSlice)
 	}
 	if ones.Hunter != "" {
-		AllJson, TmpSlice = onese.TodoHunter()
+		TmpSlice = onese.TodoHunter()
 		HostSlice = append(TmpSlice)
 	}
 	if ones.Shodan != "" {

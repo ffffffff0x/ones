@@ -19,7 +19,7 @@ var fofaRecursion = 0
 
 func TodoFofa() (string, []string) {
 	fofaRecursion += 1
-	if fofaRecursion% ones.Recursion == 0 { // 到达最大递归层数，直接退出
+	if fofaRecursion-ones.Recursion == 0 { // 到达最大递归层数，直接退出
 		return "", nil
 	}
 
