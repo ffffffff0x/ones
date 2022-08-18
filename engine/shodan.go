@@ -33,24 +33,24 @@ func TodoShodan() []string {
 		maxPage++
 	}
 
-	wg := &sync.WaitGroup{}
 	for keyword := 1; keyword <= maxPage; keyword++ {
+		wg := &sync.WaitGroup{}
 		wg.Add(1)
 		go func(keyword int, group *sync.WaitGroup) {
-			TmpSlice := SendReq1(ShodanKeyValue, keyword)
-			SumSlice1 = append(TmpSlice)
+			TmpSlice1 := SendReq1(ShodanKeyValue, keyword)
+			SumSlice1 = append(TmpSlice1)
 			group.Done()
 		}(keyword, wg)
+		wg.Wait()
 	}
-	wg.Wait()
 
 	return SumSlice1
 
 }
 
 func SendReq1(key string, num int) []string {
-	shodanRecursion += 1
-	if shodanRecursion % ones.Recursion == 0 {
+
+	if shodanRecursion-ones.Recursion == 0 {
 		return nil
 	}
 
@@ -65,6 +65,7 @@ func SendReq1(key string, num int) []string {
 	if status != fasthttp.StatusOK {
 		fmt.Println("请求没有成功:", status)
 		log.Println("shodan token 疑似失效", key)
+		shodanRecursion += 1
 		return SendReq1(ones.GetToken("shodan"), num)
 	}
 
@@ -77,5 +78,4 @@ func SendReq1(key string, num int) []string {
 		resp2 = append(resp2, v.IPStr+":"+strconv.Itoa(v.Port))
 	}
 	return resp2
-
 }

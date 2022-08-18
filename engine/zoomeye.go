@@ -33,16 +33,16 @@ func TodoZoomeye() []string {
 		maxPage++
 	}
 
-	wg := &sync.WaitGroup{}
 	for keyword := 1; keyword <= maxPage; keyword++ {
+		wg := &sync.WaitGroup{}
 		wg.Add(1)
 		go func(keyword int, group *sync.WaitGroup) {
 			TmpSlice := SendReq(ZoomKeyValue, keyword)
 			SumSlice = append(TmpSlice)
 			group.Done()
 		}(keyword, wg)
+		wg.Wait()
 	}
-	wg.Wait()
 
 	return SumSlice
 
@@ -50,8 +50,8 @@ func TodoZoomeye() []string {
 
 // SendReq https://www.zoomeye.org/doc
 func SendReq(key string, num int) []string {
-	zoomeyeRecursion += 1
-	if zoomeyeRecursion % ones.Recursion == 0 {
+
+	if zoomeyeRecursion-ones.Recursion == 0 {
 		return nil
 	}
 
@@ -82,6 +82,7 @@ func SendReq(key string, num int) []string {
 
 	if zoomeye.Matches == nil {
 		log.Println("zoomeye token 疑似失效", key)
+		zoomeyeRecursion += 1
 		return SendReq(ones.GetToken("zoom"), num)
 	} else {
 		return resp2
