@@ -207,4 +207,12 @@ ones -chaos 'ffffffff0x.com'
 
 ---
 
+## Special Thanks
+
+Special thanks to [JetBrains](https://www.jetbrains.com) for their support to this project.
+
+[![](./img/JetBrains.png)](https://www.jetbrains.com)
+
+---
+
 > create by ffffffff0x
